@@ -20,7 +20,9 @@ bin/
 
 !bin/README.md
 
-.env
+# Temporarily commit dotenv for demo purposes
+# .env
+
 _output
 dist
 .gomod

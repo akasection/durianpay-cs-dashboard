@@ -1,0 +1,151 @@
+openapi: 3.0.4
+info:
+  title: Durianpay Dashboard API
+  description: |-
+    An OpenAPI spec for Durianpay CS internal dashboard
+  termsOfService: https://swagger.io/terms/
+  contact:
+    email: rashemirafsanjany@outlook.co.id
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+tags:
+  - name: auth
+    description: Authentication API
+  - name: payments
+    description: Payment API
+paths:
+  /dashboard/v1/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login to retrieve the JWT token.
+      description: Conduct login
+      operationId: userJwtLogin
+      requestBody:
+        description: User login credentials
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The user name for login
+                password:
+                  type: string
+                  description: The password for login (clear text)
+              required:
+                - username
+      responses:
+        '200':
+          description: successful operation
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: integer
+                    format: int64
+                    description: User ID
+                  token:
+                    type: string
+                    description: JWT token
+                  iat:
+                    type: integer
+                    format: int64
+                    description: Issued at (timestamp)
+                  exp:
+                    type: integer
+                    format: int64
+                    description: Expiration time (timestamp)
+
+        '400':
+          description: Invalid username/password supplied
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /dashboard/v1/payments:
+    get:
+      tags:
+        - payment
+      summary: Shows list of payments
+      description: Multiple status values can be provided with comma separated strings.
+      operationId: listPayments
+      parameters:
+        - name: status
+          in: query
+          description: Status of payment process
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: completed
+            enum:
+              - completed
+              - processing
+              - failed
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        '400':
+          description: Invalid status value
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+      required:
+        - code
+        - message
+    Payment:
+      type: object
+      properties:
+        payment_id:
+          type: string
+          description: Unique identifier for the payment
+
+  securitySchemes:
+    payment_op:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
