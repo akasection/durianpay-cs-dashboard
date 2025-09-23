@@ -24,8 +24,19 @@ var MsgFlags = map[int]string{
 	INVALID_PARAMS: "invalid params",
 	ERROR_GENERIC:  "unknown error",
 
+	ERROR_INVALID_PARAMS: "invalid parameters",
+
+	ERROR_PAYMENT_NOT_FOUND:   "payment record not found",
+	ERROR_PAYMENT_COUNT_FAIL:  "failed to get total payment records",
+	ERROR_PAYMENT_REVIEW_FAIL: "failed to review payment; wrong action or payment already reviewed",
+
 	ERROR_USER_CREDENTIALS_INVALID: "wrong username or password",
 	ERROR_USER_MISSING_TOKEN:       "missing jwt access token",
+
+	ERROR_USER_TOKEN_EXPIRED: "jwt access token expired",
+	ERROR_USER_TOKEN_INVALID: "invalid jwt access token",
+
+	ERROR_INSUFFICIENT_PERMISSIONS: "insufficient permissions",
 }
 
 func MessageCode(code int) string {

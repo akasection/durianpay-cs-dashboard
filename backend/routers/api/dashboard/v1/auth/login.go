@@ -20,24 +20,24 @@ func PostLogin(c *gin.Context) {
 	appG := ginutil.Gin{C: c}
 	var data loginData
 	if err := c.BindJSON(&data); err != nil {
-		appG.SendResponse(http.StatusBadRequest, common.ERROR_USER_CREDENTIALS_INVALID, nil)
+		appG.SendResponse(http.StatusBadRequest, common.ERROR_USER_CREDENTIALS_INVALID, nil, nil)
 		return
 	}
 
 	result := models.CheckCredentials(data.Username, data.Password)
 
 	if !result {
-		appG.SendResponse(http.StatusUnauthorized, common.ERROR_USER_CREDENTIALS_INVALID, nil)
+		appG.SendResponse(http.StatusUnauthorized, common.ERROR_USER_CREDENTIALS_INVALID, nil, nil)
 	}
 
 	token, tokenErr := util.GenerateToken(data.Username, data.Password)
 	if tokenErr != nil {
-		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil)
+		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil, nil)
 		return
 	}
 
 	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, map[string]string{
 		"token": token,
-	})
+	}, nil)
 
 }

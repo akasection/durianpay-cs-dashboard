@@ -11,11 +11,18 @@ This project consists of three parts:
 
 ### Tech Stack
 
-- Backend: Go(1.25), Gin, GORM+SQLite
+- Backend: Go(1.25)+Gin, GORM+SQLite
 - Frontend: Vue(3), Nuxt(3/4), TypeScript, Tailwind CSS
-- Infra: Docker, Docker Compose
+- Infra: Docker Compose
 
 ## Starting the project
+
+### Workarounds
+- For Apple silicon mac, you (might) need to exec this first:
+
+```
+go env -w GOARCH=arm64
+```
 
 ## Extra
 

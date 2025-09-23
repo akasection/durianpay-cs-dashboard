@@ -165,8 +165,10 @@ paths:
                 $ref: '#/components/schemas/Payment'
         '400':
           description: Invalid action
+        '401':
+          description: Unauthorized
         '403':
-          description: Not authorized or permission denied
+          description: Permission denied
         '404':
           description: Payment not found
         default:
@@ -174,10 +176,23 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Error"
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    $ref: "#/components/schemas/Error"
+                  meta:
+                    type: object
+                    $ref: "#/components/schemas/Meta"
       security:
         - operation:
           - payment:update
+
 components:
   schemas:
     Error:
@@ -210,10 +225,28 @@ components:
           type: string
           format: date-time
           description: Date and time of the transaction
+    Meta:
+      type: object
+      properties:
+        offset:
+          type: integer
+          description: Starting index of the record
+        limit:
+          type: integer
+          description: Maximum number of record per request
+        total:
+          type: integer
+          description: Total number of records available
+        extra:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional metadata information
 
 
   securitySchemes:
-    payment_op:
+    dashboard:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
