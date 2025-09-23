@@ -6,7 +6,6 @@ import (
 	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/util"
 	"github.com/akasection/durianpay-cs-dashboard/backend/services"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type User struct {
@@ -35,50 +34,32 @@ func GetUserByUsername(username string) (User, error) {
 	return result, nil
 }
 
-func GetUserPermissions(username string) ([]string, error) {
+func GetUserRoles(username string) ([]string, error) {
 	user, err := GetUserByUsername(username)
 	if err != nil {
 		return nil, err
 	}
 
 	ctx := context.Background()
-	result, err := gorm.G[UserRole](services.DB).Where("user_id = ?", user.ID).Find(ctx)
-	if err != nil {
-		return nil, err
+	var result []map[string]interface{}
+
+	// Gorm generics way too funky on Left Join table. Use tradi instead
+	query := services.DB.WithContext(ctx).Table("user_role").
+		Select("roles.name").
+		Joins("JOIN roles ON user_role.role_id = roles.id").
+		Where("user_role.user_id = ?", user.ID)
+
+	qErr := query.Scan(&result).Error
+	if qErr != nil {
+		return nil, qErr
 	}
 
-	var roleIds []uint
+	var roles []string
 	for _, ur := range result {
-		roleIds = append(roleIds, ur.RoleId)
+		roles = append(roles, ur["name"].(string))
 	}
 
-	return ListRolePermissionsByRoleIds(roleIds)
-}
-
-func ListRolePermissionsByRoleIds(roleIds []uint) ([]string, error) {
-	ctx := context.Background()
-	var result []string
-	permissions, err := gorm.G[Permission](services.DB).
-		Select("name").
-		Joins(
-			clause.LeftJoin.AssociationFrom("role_permission", gorm.G[RolePermission](services.DB)).As("t"),
-			func(db gorm.JoinBuilder, joinTable, curTable clause.Table) error {
-				db.Where("?.permission_id = ?.id", joinTable, curTable)
-				return nil
-			},
-		).
-		// Joins("left join role_permission ON role_permission.permission_id = permission.id").
-		Where("role_permission.role_id IN (?)", roleIds).
-		Find(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, rp := range permissions {
-		result = append(result, rp.Name)
-	}
-
-	return result, nil
+	return roles, nil
 }
 
 func (User) TableName() string {

@@ -10,20 +10,20 @@ type Role struct {
 type Permission struct {
 	ID          uint   `json:"id" gorm:"PRIMARY_KEY;AUTO_INCREMENT"`
 	Name        string `json:"name" gorm:"Type:varchar(100);NOT NULL"`
-	DisplayName string `json:"displayName"`
+	DisplayName string `json:"display_name"`
 	Desc        string `json:"desc"`
 	Status      string `json:"status"`
 }
 
 // Aggregate
 type RolePermission struct {
-	PermissionId uint `gorm:"primary_key"`
-	RoleId       uint `gorm:"primary_key"`
+	PermissionId uint `json:"permission_id" gorm:"primary_key"`
+	RoleId       uint `json:"role_id" gorm:"primary_key"`
 }
 
 type UserRole struct {
-	UserId uint `gorm:"primary_key"`
-	RoleId uint `gorm:"primary_key"`
+	UserId uint `json:"user_id" gorm:"primary_key"`
+	RoleId uint `json:"role_id" gorm:"primary_key"`
 }
 
 func (RolePermission) TableName() string {

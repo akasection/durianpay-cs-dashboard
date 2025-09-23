@@ -32,8 +32,8 @@ func SetupRouter() *gin.Engine {
 		// auth
 
 		// dashboards
-		apiv1.GET("/payments", middleware.UseRbac(dto.PAYMENT_READ), PaymentApi.GetListPayments)
-		apiv1.PUT("/payment/:id/review", middleware.UseRbac(dto.PAYMENT_UPDATE), PaymentReviewApi.PutReviewPayment)
+		apiv1.GET("/payments", middleware.UseRbac(dto.ROLE_CS, dto.ROLE_OPERATION), PaymentApi.GetListPayments)
+		apiv1.PUT("/payment/:id/review", middleware.UseRbac(dto.ROLE_OPERATION), PaymentReviewApi.PutReviewPayment)
 	}
 
 	return r

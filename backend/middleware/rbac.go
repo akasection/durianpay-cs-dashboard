@@ -10,14 +10,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UseRbac(permissions ...string) gin.HandlerFunc {
+func UseRbac(roles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		appG := ginutil.Gin{C: c}
 		token, _ := util.GetTokenFromRequest(c)
 		claim, _ := util.ParseToken(token)
 
-		userPermission, _ := models.GetUserPermissions(claim.Username)
-		if util.Intersection(userPermission, permissions) == nil {
+		userRoles, _ := models.GetUserRoles(claim.Username)
+		if util.Intersection(userRoles, roles) == nil {
 			appG.SendResponse(http.StatusForbidden, common.ERROR_INSUFFICIENT_PERMISSIONS, nil, nil)
 			return
 		}

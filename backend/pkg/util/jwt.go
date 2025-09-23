@@ -12,18 +12,19 @@ import (
 var JwtSecret []byte
 
 type Claims struct {
-	Username  string `json:"username"`
-	HPassword string `json:"password"`
+	Username string   `json:"username"`
+	Roles    []string `json:"roles"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+func GenerateToken(username string, roles *[]string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(3 * time.Hour)
 
 	claims := Claims{
-		Username:  username,
-		HPassword: password,
+		Username: username,
+		Roles:    *roles,
+
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			IssuedAt:  nowTime.Unix(),

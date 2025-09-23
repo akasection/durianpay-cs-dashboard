@@ -7,5 +7,6 @@ import (
 )
 
 func SetupJWT() {
-	util.JwtSecret = []byte(os.Getenv("JWT_SECRET"))
+	secret := os.Getenv("JWT_SECRET")
+	util.JwtSecret = []byte(secret)
 }

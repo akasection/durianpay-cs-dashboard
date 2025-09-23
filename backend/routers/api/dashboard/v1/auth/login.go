@@ -30,8 +30,8 @@ func PostLogin(c *gin.Context) {
 		appG.SendResponse(http.StatusUnauthorized, common.ERROR_USER_CREDENTIALS_INVALID, nil, nil)
 		return
 	}
-
-	token, tokenErr := util.GenerateToken(data.Username, data.Password)
+	roles, _ := models.GetUserRoles(data.Username)
+	token, tokenErr := util.GenerateToken(data.Username, &roles)
 	if tokenErr != nil {
 		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil, nil)
 		return

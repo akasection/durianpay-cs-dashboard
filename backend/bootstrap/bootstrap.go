@@ -8,6 +8,7 @@ import (
 )
 
 func Initialize() {
+	SetupJWT()
 	db, err := services.ConnectDB()
 	if err != nil {
 		panic("failed to initialize database")
