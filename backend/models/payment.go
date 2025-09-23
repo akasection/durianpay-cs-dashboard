@@ -44,10 +44,10 @@ const (
 	OrderTypeDescending OrderType = " DESC"
 )
 
-func ListPayments(page int, limit int, status string, sortBy SortBy, orderType OrderType) ([]*Payment, error) {
+func ListPayments(offset int, limit int, status string, sortBy SortBy, orderType OrderType) ([]*Payment, error) {
 	var payments []*Payment
 
-	query := services.DB.Offset(int((page - 1) * limit)).Limit(int(limit))
+	query := services.DB.Offset(offset).Limit(limit)
 
 	if status != "" {
 		query = query.Where("status = ?", status)
