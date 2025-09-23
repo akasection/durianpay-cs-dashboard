@@ -49,7 +49,7 @@ func ListPayments(page int, limit int, status string, sortBy SortBy, orderType O
 	var payments []*Payment
 	queryLimit := 10
 
-	// if defined, set the query limit to custom value
+	// limit will set to 10 or defined "limit"
 	if limit > 0 {
 		queryLimit = limit
 	}
@@ -57,7 +57,7 @@ func ListPayments(page int, limit int, status string, sortBy SortBy, orderType O
 	queryLimit = util.ClampInt(queryLimit, 1, 100)
 	offsetPage := util.ClampInt(page, 1, 32767)
 
-	query := services.DB.Offset(offsetPage * queryLimit).Limit(queryLimit)
+	query := services.DB.Offset((offsetPage - 1) * queryLimit).Limit(queryLimit)
 
 	if status != "" {
 		query = query.Where("status = ?", status)

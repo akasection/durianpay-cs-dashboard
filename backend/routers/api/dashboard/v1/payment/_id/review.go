@@ -11,8 +11,8 @@ import (
 )
 
 type ReviewAction struct {
-	PaymentId uint   `json:"payment_id" binding:"required"`
-	Action    string `json:"action" binding:"required,oneof=approve reject"`
+	PaymentId uint                 `json:"payment_id" binding:"required"`
+	Action    models.PaymentStatus `json:"action" binding:"required,oneof=completed failed"`
 }
 
 func PutReviewPayment(c *gin.Context) {
@@ -20,7 +20,7 @@ func PutReviewPayment(c *gin.Context) {
 	paymentId, _ := strconv.Atoi(c.Param("id"))
 	var payload = ReviewAction{
 		PaymentId: uint(paymentId),
-		Action:    c.PostForm("action"),
+		Action:    models.PaymentStatus(c.PostForm("action")),
 	}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {

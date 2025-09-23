@@ -2,7 +2,6 @@ package PaymentApi
 
 import (
 	"net/http"
-	"strconv"
 
 	PaymentModel "github.com/akasection/durianpay-cs-dashboard/backend/models"
 	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/common"
@@ -21,41 +20,36 @@ type ListPaymentsQuery struct {
 
 func GetListPayments(c *gin.Context) {
 	appG := ginutil.Gin{C: c}
-
-	// Validate query parameters
-	limit, _ := strconv.Atoi(c.Query("limit"))
-	page, _ := strconv.Atoi(c.Query("page"))
-	status := c.Query("status")
-	sort := c.Query("sort")
-	order := c.Query("order")
-	var query = ListPaymentsQuery{
-		Sort:   PaymentModel.SortBy(sort),
-		Order:  PaymentModel.OrderType(order),
-		Page:   page,
-		Status: status,
-		Limit:  limit,
-	}
-	if err := c.ShouldBind(&query); err != nil {
+	var query ListPaymentsQuery
+	if err := c.ShouldBindQuery(&query); err != nil {
 		// TODO: filter err based on validation error type
 		appG.SendResponse(http.StatusBadRequest, common.ERROR_INVALID_PARAMS, nil, nil)
 		return
 	}
 
-	payments, pErr := PaymentModel.ListPayments(page, limit, status, PaymentModel.SortBy(sort), PaymentModel.OrderType(order))
+	payments, pErr := PaymentModel.ListPayments(query.Page, query.Limit, query.Status, PaymentModel.SortBy(query.Sort), PaymentModel.OrderType(query.Order))
 	counts := PaymentModel.CountTotalPayments()
 	if pErr != nil {
 		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil, nil)
 		return
 	}
 
+	var countIndex = map[string]interface{}{
+		"all":        counts.Total,
+		"completed":  counts.Completed,
+		"processing": counts.Processing,
+		"failed":     counts.Failed,
+	}
+
+	countLabel := "all"
+	if query.Status != "" {
+		countLabel = query.Status
+	}
+
 	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, payments, ginutil.Meta{
-		Offset: util.ClampInt((page-1), 0, 32767) * len(payments),
-		Limit:  len(payments),
-		Total:  counts.Total,
-		Extra: map[string]interface{}{
-			"completed":  counts.Completed,
-			"processing": counts.Processing,
-			"failed":     counts.Failed,
-		},
+		Offset: util.ClampInt((query.Page-1), 0, 32767) * query.Limit,
+		Limit:  query.Limit,
+		Total:  countIndex[countLabel].(int),
+		Extra:  countIndex,
 	})
 }
