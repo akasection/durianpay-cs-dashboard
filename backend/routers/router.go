@@ -22,13 +22,14 @@ func SetupRouter() *gin.Engine {
 		})
 	})
 
+	// Setup login endpoint
+	r.POST("/dashboard/v1/auth/login", AuthApi.PostLogin)
+
 	// Setup API v1
 	apiv1 := r.Group("/dashboard/v1")
-
 	apiv1.Use(middleware.UseJwt())
 	{
 		// auth
-		apiv1.POST("/auth/login", AuthApi.PostLogin)
 
 		// dashboards
 		apiv1.GET("/payments", middleware.UseRbac(dto.PAYMENT_READ), PaymentApi.GetListPayments)

@@ -7,10 +7,10 @@ import (
 
 // Standard API response structure
 type ApiResponse struct {
-	Code    int         `json:"code"`    // e.g., 200 for success, 400 for client error, etc.
-	Message string      `json:"message"` // A human-readable message
-	Data    interface{} `json:"data"`    // The actual data payload
-	Meta    interface{} `json:"meta"`    // Optional metadata, e.g., pagination info
+	Code    int         `json:"code"`           // e.g., 200 for success, 400 for client error, etc.
+	Message string      `json:"message"`        // A human-readable message
+	Data    interface{} `json:"data,omitempty"` // The actual data payload
+	Meta    interface{} `json:"meta,omitempty"` // Optional metadata, e.g., pagination info
 }
 
 type Meta struct {

@@ -26,13 +26,13 @@ func CheckCredentials(username, password string) bool {
 	return isMatch
 }
 
-func GetUserByUsername(username string) (*User, error) {
+func GetUserByUsername(username string) (User, error) {
 	ctx := context.Background()
 	result, err := gorm.G[User](services.DB).Where("username = ?", username).First(ctx)
 	if err != nil {
-		return nil, err
+		return User{}, err
 	}
-	return &result, nil
+	return result, nil
 }
 
 func GetUserPermissions(username string) ([]string, error) {

@@ -12,9 +12,8 @@ import (
 var JwtSecret []byte
 
 type Claims struct {
-	Username  string   `json:"username"`
-	HPassword string   `json:"password"`
-	Roles     []string `json:"roles"`
+	Username  string `json:"username"`
+	HPassword string `json:"password"`
 	jwt.StandardClaims
 }
 
@@ -28,7 +27,7 @@ func GenerateToken(username, password string) (string, error) {
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
 			IssuedAt:  nowTime.Unix(),
-			Issuer:    gin.Mode(),
+			Issuer:    "gin-cs-dashboard",
 		},
 	}
 

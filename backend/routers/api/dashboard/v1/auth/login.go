@@ -28,6 +28,7 @@ func PostLogin(c *gin.Context) {
 
 	if !result {
 		appG.SendResponse(http.StatusUnauthorized, common.ERROR_USER_CREDENTIALS_INVALID, nil, nil)
+		return
 	}
 
 	token, tokenErr := util.GenerateToken(data.Username, data.Password)
