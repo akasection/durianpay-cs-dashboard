@@ -17,8 +17,11 @@ func UseRbac(roles ...string) gin.HandlerFunc {
 		claim, _ := util.ParseToken(token)
 
 		userRoles, _ := models.GetUserRoles(claim.Username)
-		if util.Intersection(userRoles, roles) == nil {
-			appG.SendResponse(http.StatusForbidden, common.ERROR_INSUFFICIENT_PERMISSIONS, nil, nil)
+		var userRolesStr []string = util.Intersection(userRoles, roles)
+		// log.Println("roles", roles, "userRoles", userRoles, "userRolesStr:", userRolesStr)
+		if userRolesStr == nil {
+			appG.SendResponse(http.StatusForbidden, common.ERROR_MISMATCHED_ROLE, nil, nil)
+			c.Abort()
 			return
 		}
 

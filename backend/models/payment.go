@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/util"
 	"github.com/akasection/durianpay-cs-dashboard/backend/services"
 	"gorm.io/gorm"
 )
@@ -47,17 +46,8 @@ const (
 
 func ListPayments(page int, limit int, status string, sortBy SortBy, orderType OrderType) ([]*Payment, error) {
 	var payments []*Payment
-	queryLimit := 10
 
-	// limit will set to 10 or defined "limit"
-	if limit > 0 {
-		queryLimit = limit
-	}
-
-	queryLimit = util.ClampInt(queryLimit, 1, 100)
-	offsetPage := util.ClampInt(page, 1, 32767)
-
-	query := services.DB.Offset((offsetPage - 1) * queryLimit).Limit(queryLimit)
+	query := services.DB.Offset(int((page - 1) * limit)).Limit(int(limit))
 
 	if status != "" {
 		query = query.Where("status = ?", status)

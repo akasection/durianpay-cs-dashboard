@@ -13,8 +13,8 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	r.Use(gin.Logger()) // Supply to logger vendor later
-	r.Use(gin.Recovery())
+	// r.Use(gin.Logger()) // Supply to logger vendor later
+	// r.Use(gin.Recovery())
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

@@ -17,6 +17,7 @@ const (
 	ERROR_PAYMENT_REVIEW_FAIL = 2003
 
 	ERROR_INSUFFICIENT_PERMISSIONS = 3001
+	ERROR_MISMATCHED_ROLE          = 3002
 )
 
 var MsgFlags = map[int]string{
@@ -37,6 +38,7 @@ var MsgFlags = map[int]string{
 	ERROR_USER_TOKEN_INVALID: "invalid jwt access token",
 
 	ERROR_INSUFFICIENT_PERMISSIONS: "insufficient permissions",
+	ERROR_MISMATCHED_ROLE:          "mismatched user role",
 }
 
 func MessageCode(code int) string {

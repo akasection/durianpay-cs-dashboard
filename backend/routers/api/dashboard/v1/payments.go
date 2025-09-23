@@ -37,7 +37,17 @@ func GetListPayments(c *gin.Context) {
 		return
 	}
 
-	payments, pErr := PaymentModel.ListPayments(query.Page, query.Limit, query.Status, PaymentModel.SortBy(query.Sort), PaymentModel.OrderType(query.Order))
+	queryLimit := 10
+
+	// unset limit will defaulted to 10, else use provided limit
+	if query.Limit > 0 {
+		queryLimit = query.Limit
+	}
+
+	queryLimit = util.ClampInt(queryLimit, 1, 100)
+	offset := util.ClampInt((query.Page-1), 0, 32767) * queryLimit
+
+	payments, pErr := PaymentModel.ListPayments(offset, queryLimit, query.Status, PaymentModel.SortBy(query.Sort), PaymentModel.OrderType(query.Order))
 	counts := PaymentModel.CountTotalPayments()
 	if pErr != nil {
 		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil, nil)
@@ -57,8 +67,8 @@ func GetListPayments(c *gin.Context) {
 	}
 
 	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, payments, ginutil.Meta{
-		Offset: util.ClampInt((query.Page-1), 0, 32767) * query.Limit,
-		Limit:  query.Limit,
+		Offset: offset,
+		Limit:  queryLimit,
 		Total:  countIndex[countLabel].(int),
 		Extra:  countIndex,
 	})
