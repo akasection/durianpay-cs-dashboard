@@ -90,7 +90,7 @@ func ReviewStatus(id uint, status PaymentStatus) error {
 	}
 
 	result, err := gorm.G[Payment](services.DB).
-		Where("id = ? AND status = ?", id, PaymentStatusProcessing).
+		Where("payment_id = ? AND status = ?", id, PaymentStatusProcessing).
 		Update(ctx, "status", status)
 
 	if err != nil {

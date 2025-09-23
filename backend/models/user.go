@@ -10,9 +10,9 @@ import (
 )
 
 type User struct {
-	ID        uint   `gorm:"primaryKey" json:"id"`
-	Username  string `gorm:"uniqueIndex;size:31" json:"username"`
-	HPassword string `json:"password"`
+	ID        uint   `gorm:"primaryKey;AUTO_INCREMENT" json:"id"`
+	Username  string `gorm:"uniqueIndex;size:31;type:varchar(32);not null" json:"username"`
+	HPassword string `gorm:"type:varchar(72);not null" json:"password"`
 }
 
 func CheckCredentials(username, password string) bool {
@@ -35,7 +35,7 @@ func GetUserByUsername(username string) (*User, error) {
 	return &result, nil
 }
 
-func ListUserPermissions(username string) ([]string, error) {
+func GetUserPermissions(username string) ([]string, error) {
 	user, err := GetUserByUsername(username)
 	if err != nil {
 		return nil, err

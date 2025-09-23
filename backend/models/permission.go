@@ -31,13 +31,13 @@ func (RolePermission) TableName() string {
 }
 
 func (Permission) TableName() string {
-	return "permission"
+	return "permissions"
 }
 
 func (Role) TableName() string {
-	return "role"
+	return "roles"
 }
 
 func (UserRole) TableName() string {
-	return "user_roles"
+	return "user_role"
 }

@@ -4,38 +4,40 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/akasection/durianpay-cs-dashboard/backend/models"
 	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/common"
 	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/ginutil"
-	"github.com/gin-gonic/gin"
 )
 
 type ReviewAction struct {
-	PaymentId uint                 `json:"payment_id" binding:"required"`
-	Action    models.PaymentStatus `json:"action" binding:"required,oneof=completed failed"`
+	Action models.PaymentStatus `json:"action" binding:"required,oneof=completed failed"`
 }
 
 func PutReviewPayment(c *gin.Context) {
 	appG := ginutil.Gin{C: c}
-	paymentId, _ := strconv.Atoi(c.Param("id"))
-	var payload = ReviewAction{
-		PaymentId: uint(paymentId),
-		Action:    models.PaymentStatus(c.PostForm("action")),
-	}
+	paymentId, idErr := strconv.Atoi(c.Param("id"))
 
-	if err := c.ShouldBindJSON(&payload); err != nil {
+	if idErr != nil || paymentId <= 0 {
 		appG.SendResponse(http.StatusBadRequest, common.ERROR_INVALID_PARAMS, nil, nil)
 		return
 	}
 
-	err := models.ReviewStatus(payload.PaymentId, payload.Action)
+	var payload ReviewAction
+	if bindErr := c.ShouldBindJSON(&payload); bindErr != nil {
+		appG.SendResponse(http.StatusBadRequest, common.ERROR_INVALID_PARAMS, nil, nil)
+		return
+	}
+
+	err := models.ReviewStatus(uint(paymentId), payload.Action)
 
 	if err != nil {
 		appG.SendResponse(http.StatusNotFound, common.ERROR_PAYMENT_NOT_FOUND, nil, err)
 		return
 	}
 
-	res, _ := models.GetPaymentById(payload.PaymentId)
+	res, _ := models.GetPaymentById(uint(paymentId))
 
-	appG.SendResponse(http.StatusAccepted, common.SUCCESS_OK, res, nil)
+	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, res, nil)
 }

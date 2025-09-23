@@ -1,9 +1,12 @@
 package util
 
 import (
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
 var JwtSecret []byte
@@ -24,6 +27,8 @@ func GenerateToken(username, password string) (string, error) {
 		HPassword: password,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
+			IssuedAt:  nowTime.Unix(),
+			Issuer:    gin.Mode(),
 		},
 	}
 
@@ -34,6 +39,9 @@ func GenerateToken(username, password string) (string, error) {
 func ParseToken(tokenString string) (*Claims, error) {
 	// TODO: implement
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
 		return JwtSecret, nil
 	})
 
@@ -44,4 +52,19 @@ func ParseToken(tokenString string) (*Claims, error) {
 	}
 
 	return nil, err
+}
+
+func GetTokenFromRequest(c *gin.Context) (string, error) {
+	token := c.Query("token")
+	headerToken := c.Request.Header.Get("Authorization")
+	prefix := "Bearer "
+	if len(headerToken) > len(prefix) && headerToken[:len(prefix)] == prefix {
+		token = headerToken[len(prefix):]
+	}
+
+	if token == "" {
+		return "", errors.New("authorization token not found")
+	}
+
+	return token, nil
 }
