@@ -5,32 +5,32 @@
       <hr></hr>
     </div>
 
-    <div v-if="fetchStatus === 'pending'" class="flex items-center text-yellow-600">
-      <UIcon name="i-material-symbols-hourglass-empty" class="size-5 inline-block align-middle mr-2 animate-spin" />
-      <span class="align-middle">Loading...</span>
-    </div>
-    <div v-else class="controls my-2 p-3 border-lg border border-neutral-100 rounded-xl">
-      <div class="flex gap-4 flex-wrap">
-        <div class="flex gap-2 items-center">
-          <UFormField label="Status">
-            <USelect v-model="status" :items="filterStatus" class="w-48" />
-          </UFormField>
-        </div>
-        <div class="flex gap-2 items-center">
-          <UFormField label="Sort by">
-            <USelect v-model="sortBy" :items="filterSortBy" class="w-48" />
-          </UFormField>
-        </div>
-
-        <div class="flex gap-2 items-center">
-          <UFormField label="Order" class="m-0 p-0">
-            <USelect v-model="orderBy" :items="filterOrderBy" class="w-48" />
-          </UFormField>
-        </div>
-
-
+    <ClientOnly>
+      <div v-if="fetchStatus === 'pending'" class="flex justify-center items-center text-yellow-600">
+        <UIcon name="i-material-symbols-hourglass-empty" class="size-5 inline-block align-middle mr-2 animate-spin" />
+        <span class="align-middle">Loading...</span>
       </div>
-    </div>
+      <div v-else class="controls my-2 p-3 border-lg border border-neutral-100 rounded-xl">
+        <div class="flex gap-4 flex-wrap">
+          <div class="flex gap-2 items-center">
+            <UFormField label="Status">
+              <USelect v-model="status" :items="filterStatus" class="w-48" />
+            </UFormField>
+          </div>
+          <div class="flex gap-2 items-center">
+            <UFormField label="Sort by">
+              <USelect v-model="sortBy" :items="filterSortBy" class="w-48" />
+            </UFormField>
+          </div>
+
+          <div class="flex gap-2 items-center">
+            <UFormField label="Order" class="m-0 p-0">
+              <USelect v-model="orderBy" :items="filterOrderBy" class="w-48" />
+            </UFormField>
+          </div>
+        </div>
+      </div>
+    </ClientOnly>
     <div class="screen-content mt-4">
       <UTable
         ref="table"
@@ -192,8 +192,7 @@ const paginationExtra = ref({
   processing: 0,
 })
 
-
-
+const toast = useToast()
 const api = useApi()
 
 function updatePagination(page: number) {
@@ -217,17 +216,34 @@ async function confirmReview(action: 'completed' | 'failed') {
   if (!reviewRow.value) return
   const paymentId = reviewRow.value.getValue('payment_id')
   console.log(`Payment ${paymentId} marked as ${action}`)
-  const response = await api<BaseResponse<{}>>(`/dashboard/v1/payment/${paymentId}/review`, {
-    method: 'PUT',
-    body: {
-      action
-    }
-  })
-  // Close modal
-  showReviewModal.value = false
-  reviewRow.value = undefined
-  // Refresh data
-  execute()
+  try {
+    const response = await api<BaseResponse<{}>>(`/dashboard/v1/payment/${paymentId}/review`, {
+      method: 'PUT',
+      body: {
+        action
+      }
+    })
+    toast.add({
+      title: 'Success',
+      icon: 'i-material-symbols-check-circle-outline',
+      color: 'success',
+      description: (response.data as any).message || `Payment reviewed successfully to ${action}.`
+    })
+    // Refresh data
+    execute()
+  } catch (err) {
+    console.error('Error reviewing payment:', err)
+    toast.add({
+      title: 'Error',
+      icon: 'i-material-symbols-error-outline',
+      color: 'error',
+      description: (err as any).data?.message || 'An error occurred while reviewing the payment.'
+    })
+  } finally {
+    // Close modal
+    showReviewModal.value = false
+    reviewRow.value = undefined
+  }
 }
 
 const { data: paginationData, execute, status: fetchStatus } = useLazyAsyncData('payments', async () => {

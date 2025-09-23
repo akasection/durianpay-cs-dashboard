@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/akasection/durianpay-cs-dashboard/backend/models"
@@ -18,8 +19,8 @@ func UseRbac(roles ...string) gin.HandlerFunc {
 
 		userRoles, _ := models.GetUserRoles(claim.Username)
 		var userRolesStr []string = util.Intersection(userRoles, roles)
-		// log.Println("roles", roles, "userRoles", userRoles, "userRolesStr:", userRolesStr)
-		if userRolesStr == nil {
+		log.Println("roles", roles, "userRoles", userRoles, "userRolesStr:", userRolesStr)
+		if len(userRolesStr) == 0 {
 			appG.SendResponse(http.StatusForbidden, common.ERROR_MISMATCHED_ROLE, nil, nil)
 			c.Abort()
 			return
