@@ -44,37 +44,16 @@ paths:
       responses:
         '200':
           description: successful operation
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  user_id:
-                    type: integer
-                    format: int64
-                    description: User ID
                   token:
                     type: string
                     description: JWT token
-                  iat:
-                    type: integer
-                    format: int64
-                    description: Issued at (timestamp)
-                  exp:
-                    type: integer
-                    format: int64
-                    description: Expiration time (timestamp)
+                  claim:
+                    $ref: "#/components/schemas/Claims"
 
         '400':
           description: Invalid username/password supplied
@@ -242,6 +221,28 @@ components:
           additionalProperties:
             type: string
           description: Additional metadata information
+    Claims:
+      type: object
+      properties:
+        username:
+          type: string
+          description: The username of the user
+        roles:
+          type: array
+          items:
+            type: string
+          description: List of roles assigned to the user
+        iat:
+          type: integer
+          format: int64
+          description: Issued at (unix timestamp)
+        exp:
+          type: integer
+          format: int64
+          description: Expiration time (unix timestamp)
+        iss:
+          type: string
+          description: Issuer of the token
 
 
   securitySchemes:

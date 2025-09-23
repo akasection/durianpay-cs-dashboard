@@ -1,0 +1,32 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+.slide-fade-left-leave-active,
+.slide-fade-right-leave-active,
+.slide-fade-top-leave-active {
+  transition: all 0.07s ease-out;
+}
+
+.slide-fade-left-enter-active,
+.slide-fade-right-enter-active,
+.slide-fade-top-enter-active {
+  transition: all 0.21s ease-out;
+}
+
+.slide-fade-left-enter-from,
+.slide-fade-right-leave-to {
+  @apply opacity-0 translate-x-4;
+}
+
+.slide-fade-left-leave-to,
+.slide-fade-right-enter-from {
+  @apply opacity-0 -translate-x-4;
+}
+
+.slide-fade-top-enter-from {
+  @apply opacity-0 translate-y-3;
+}
+
+.slide-fade-top-leave-to {
+  @apply opacity-0 -translate-y-1;
+}

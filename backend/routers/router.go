@@ -1,6 +1,9 @@
 package routers
 
 import (
+	"os"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	// "github.com/akasection/durianpay-cs-dashboard/backend/middleware/jwt"
@@ -21,6 +24,14 @@ func SetupRouter() *gin.Engine {
 			"message": "OK",
 		})
 	})
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{os.Getenv("FRONTEND_URL")},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+	}))
 
 	// Setup login endpoint
 	r.POST("/dashboard/v1/auth/login", AuthApi.PostLogin)

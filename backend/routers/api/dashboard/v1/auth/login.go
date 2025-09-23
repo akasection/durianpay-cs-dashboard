@@ -31,14 +31,15 @@ func PostLogin(c *gin.Context) {
 		return
 	}
 	roles, _ := models.GetUserRoles(data.Username)
-	token, tokenErr := util.GenerateToken(data.Username, &roles)
+	token, claims, tokenErr := util.GenerateToken(data.Username, &roles)
 	if tokenErr != nil {
 		appG.SendResponse(http.StatusInternalServerError, common.ERROR_GENERIC, nil, nil)
 		return
 	}
 
-	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, map[string]string{
+	appG.SendResponse(http.StatusOK, common.SUCCESS_OK, map[string]interface{}{
 		"token": token,
+		"user":  claims,
 	}, nil)
 
 }
