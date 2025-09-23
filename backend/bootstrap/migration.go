@@ -3,10 +3,15 @@ package bootstrap
 import (
 	"gorm.io/gorm"
 
-	PaymentModel "github.com/akasection/durianpay-cs-dashboard/backend/models"
-	UserModel "github.com/akasection/durianpay-cs-dashboard/backend/models"
+	"github.com/akasection/durianpay-cs-dashboard/backend/models"
 )
 
 func MigrateDB(db *gorm.DB) {
-	db.AutoMigrate(&UserModel.User{}, &PaymentModel.Payment{})
+	db.AutoMigrate(&models.Role{})
+	db.AutoMigrate(&models.Permission{})
+	db.AutoMigrate(&models.UserRole{})
+	db.AutoMigrate(&models.RolePermission{})
+	db.AutoMigrate(&models.Role{})
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Payment{})
 }

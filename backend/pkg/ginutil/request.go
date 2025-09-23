@@ -1,4 +1,4 @@
-package http
+package ginutil
 
 // Common request query structure
 

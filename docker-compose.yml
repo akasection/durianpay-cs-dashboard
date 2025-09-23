@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  web:
+    image: node:22-alpine
+    working_dir: ./app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command:
+      - sh
+      - -c
+      - |
+        corepack enable
+        pnpm i
+        pnpm dev
+  api:
+    image: golang:1.25-alpine
+    ports:
+      - "8081:8081"
+    environment:
+      - LISTEN_ADDR=:8081
+    working_dir: /api
+    volumes:
+      - ./backend:/api
+    command:
+      - sh
+      - -c
+      - |
+        go env -w CGO_ENABLED=1
+        go install
+        go mod tidy
+        go run main.go
+  haproxy:
+    image: haproxy:2.9
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./infra/haproxy/haproxy.cfg:/haproxy/haproxy.cfg
+    working_dir: /haproxy
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./backend/db/redis_data:/data

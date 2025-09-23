@@ -1,0 +1,2 @@
+*.sqlite diff=sqldiff
+*.db     filter=lfs diff=sqldiff merge=lfs -text

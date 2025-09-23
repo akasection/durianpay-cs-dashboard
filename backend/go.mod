@@ -3,13 +3,14 @@ module github.com/akasection/durianpay-cs-dashboard/backend
 go 1.25.0
 
 require (
-	github.com/gin-gonic/gin v1.11.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/gin-gonic/gin v1.11.0
+	github.com/joho/godotenv v1.5.1
+	golang.org/x/crypto v0.42.0
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.0
-	golang.org/x/crypto v0.42.0
-	github.com/joho/godotenv v1.5.1
 )
+
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect
 	github.com/bytedance/sonic v1.14.1 // indirect
@@ -45,5 +46,4 @@ require (
 	golang.org/x/text v0.29.0 // indirect
 	golang.org/x/tools v0.37.0 // indirect
 	google.golang.org/protobuf v1.36.9 // indirect
-
 )

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ListPayments(c *gin.Context) {
+func GetListPayments(c *gin.Context) {
 
 	// Validate query parameters
 	status := c.Query("status")

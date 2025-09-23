@@ -3,9 +3,10 @@ package routers
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/akasection/durianpay-cs-dashboard/backend/middleware/jwt"
+	// "github.com/akasection/durianpay-cs-dashboard/backend/middleware/jwt"
 	PaymentApi "github.com/akasection/durianpay-cs-dashboard/backend/routers/api/dashboard/v1"
 	AuthApi "github.com/akasection/durianpay-cs-dashboard/backend/routers/api/dashboard/v1/auth"
+	PaymentReviewApi "github.com/akasection/durianpay-cs-dashboard/backend/routers/api/dashboard/v1/payment/_id"
 )
 
 func SetupRouter() *gin.Engine {
@@ -21,16 +22,15 @@ func SetupRouter() *gin.Engine {
 
 	// Setup API v1
 	apiv1 := r.Group("/dashboard/v1")
-	apiv1.Use(jwt.JwtMiddleware())
+
+	// apiv1.Use(jwt.JwtMiddleware())
 	{
 		// auth
 		apiv1.POST("/auth/login", AuthApi.PostLogin)
 
 		// dashboards
-		apiv1.GET("/payments", PaymentApi.ListPayments)
-		// apiv1.POST("/payments")
-		apiv1.GET("/payment/:id/review")
-		apiv1.POST("/payment/:id/review")
+		apiv1.GET("/payments", PaymentApi.GetListPayments)
+		apiv1.PUT("/payment/:id/review", PaymentReviewApi.PutReviewPayment)
 	}
 
 	return r

@@ -3,15 +3,11 @@ package bootstrap
 import (
 	"os"
 
-	"github.com/joho/godotenv"
-
 	"github.com/akasection/durianpay-cs-dashboard/backend/routers"
 	"github.com/akasection/durianpay-cs-dashboard/backend/services"
 )
 
 func Initialize() {
-	godotenv.Load()
-
 	db, err := services.ConnectDB()
 	if err != nil {
 		panic("failed to initialize database")

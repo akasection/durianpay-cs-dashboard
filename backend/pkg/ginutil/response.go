@@ -1,4 +1,4 @@
-package http
+package ginutil
 
 import (
 	"github.com/akasection/durianpay-cs-dashboard/backend/pkg/common"
