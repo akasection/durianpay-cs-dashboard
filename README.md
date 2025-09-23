@@ -17,6 +17,14 @@ This project consists of three parts:
 
 ## Starting the project
 
+### Prepare Dependencies
+
+### Build Project (Dev)
+
+#### Backend
+
+#### Frontend
+
 ### Workarounds
 - For Apple silicon mac, you (might) need to exec this first:
 
