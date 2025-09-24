@@ -18,4 +18,4 @@ run-backend:
 
 run-frontend:
 	cd frontend && \
-	pnpm dev -- --host
+	pnpm dev --host
