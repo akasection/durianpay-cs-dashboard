@@ -66,7 +66,17 @@ go env -w GOARCH=arm64
 
 ### Testing
 
-TODO
+#### Manual (Frontend)Testing
+
+There are two users pre-created in the database:
+- username: `cs_1`, password: `1234` (`cs` role)
+- username: `operator`, password: `4321` (`operation` role)
+
+And there are some pre-created transactions in the database. Feel free to login and commit some changes.
+
+#### New user generation
+
+New user can be directly inserted into `users` table, with password hashed using `bcrypt` (https://bcrypt-generator.com/)
 
 ### OpenAPI Spec
 
