@@ -1,6 +1,6 @@
 # (Take Home Test) DurianPay Customer Service Dashboard
 -----
-This is a sample project based on test requiremennts
+This is a sample project based on interview requiremennts
 
 ## Architecture
 
@@ -17,13 +17,34 @@ This project consists of three parts:
 
 ## Starting the project
 
-### Prepare Dependencies
+### Dependencies
+
+Using `Makefile:
+
+```
+make dep
+```
+This will instlall all dependencies for both backend and frontend.
 
 ### Build Project (Dev)
 
+Then, you can start the project using:
+
 #### Backend
 
+```bash
+make run-backend
+```
+
+Server will be ready at `http://localhost:8081`
+
 #### Frontend
+
+```bash
+make run-frontend
+```
+
+Server will be ready at `http://localhost:3000`
 
 ### Workarounds
 - For Apple silicon mac, you (might) need to exec this first:
@@ -36,8 +57,12 @@ go env -w GOARCH=arm64
 
 ### Testing
 
+TODO
+
 ### OpenAPI Spec
 
-### Contribution
+Read `openapi.yaml` for the OpenAPI spec
+
+# Contribute
 
 Well... feel free to open PRs if you want to contribute :'D

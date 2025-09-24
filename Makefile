@@ -10,6 +10,8 @@ dep-frontend:
 	corepack enable && \
 	pnpm install
 
+dep: dep-backend dep-frontend
+
 run-backend:
 	cd backend && \
 	go run main.go

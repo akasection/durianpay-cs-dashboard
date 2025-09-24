@@ -2,6 +2,7 @@ name: durianpay-cs-dashboard
 services:
   web:
     image: node:22-alpine
+    network_mode: host
     working_dir: /app
     environment:
       CI: "true"
@@ -21,6 +22,7 @@ services:
         pnpm dev -- --host
   api:
     image: golang:1.25-alpine
+    network_mode: host
     ports:
       - "8081:8081"
     environment:
@@ -40,6 +42,7 @@ services:
         go run main.go
   haproxy:
     image: haproxy:2.1-alpine
+    network_mode: host
     ports:
       - "8080:8080"
     volumes:
