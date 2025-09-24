@@ -66,7 +66,7 @@ go env -w GOARCH=arm64
 
 ### Testing
 
-#### Manual (Frontend)Testing
+#### Manual (Frontend) Testing
 
 There are two users pre-created in the database:
 - username: `cs_1`, password: `1234` (`cs` role)
