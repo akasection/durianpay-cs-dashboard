@@ -80,6 +80,10 @@ const UBadge = resolveComponent('UBadge')
 
 // const table = useTemplateRef('table')
 
+definePageMeta({
+  middleware: ['auth-logged-in']
+})
+
 type Payment = {
   payment_id: string
   merchant_name: string

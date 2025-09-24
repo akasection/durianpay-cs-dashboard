@@ -27,6 +27,9 @@ import type { InferType } from 'yup'
 import type { FormSubmitEvent } from '@nuxt/ui'
 import { useAuthStore } from '~/stores/auth'
 
+definePageMeta({
+  middleware: ['auth-login-page']
+})
 const store = useAuthStore()
 const toast = useToast()
 
