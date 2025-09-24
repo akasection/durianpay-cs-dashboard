@@ -1,4 +1,4 @@
-# (Take Home Test) DurianPay Customer Service Dashboard
+# (Take Home Test) Durianpay Customer Service Dashboard
 -----
 This is a sample project based on interview requiremennts
 
