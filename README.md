@@ -26,7 +26,7 @@ make dep
 ```
 This will instlall all dependencies for both backend and frontend.
 
-### Build Project (Dev)
+### Run Project (Dev)
 
 Then, you can start the project using:
 
@@ -46,10 +46,19 @@ make run-frontend
 
 Server will be ready at `http://localhost:3000`
 
+### Build Project (Prod)
+
+```bash
+make build
+```
+The files will be generated into:
+- Backend: `./bin`
+- Frontend: `./frontend/.output/public`
+
 ### Workarounds
 - For Apple silicon mac, you (might) need to exec this first:
 
-```
+```bash
 go env -w GOARCH=arm64
 ```
 
