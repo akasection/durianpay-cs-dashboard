@@ -36,7 +36,7 @@ Then, you can start the project using:
 make run-backend
 ```
 
-Server will be ready at `http://localhost:8081`
+Backend server will be ready at `http://localhost:8081`
 
 #### Frontend
 
@@ -44,7 +44,7 @@ Server will be ready at `http://localhost:8081`
 make run-frontend
 ```
 
-Server will be ready at `http://localhost:3000`
+Nuxt server will be ready at `http://localhost:3000`
 
 ### Build Project (Prod)
 
